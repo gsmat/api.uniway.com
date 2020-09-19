@@ -29,7 +29,7 @@ class SpecializationRequest extends FormRequest
             'is_special' => ['required','boolean'],
             'is_paid' => ['required','boolean'],
             'university_id' => ['required','integer'],
-            'group' => ['required','integer','min:1','max:4']
+            'group' => ['required','integer','min:1','max:5']
         ];
     }
 }
