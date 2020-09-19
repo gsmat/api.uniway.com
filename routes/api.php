@@ -18,10 +18,11 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('specialization')->group(function () {
         Route::get('/', [SpecializationController::class, 'index'])->name('get.specialization');
-        Route::post('store', [SpecializationController::class, 'store'])->name('store.specialization')->middleware('auth');
+        Route::post('store', [SpecializationController::class, 'store'])->name('store.specialization');
     });
 
     Route::prefix('universities')->group(function () {
+        Route::get('/',[UniversityController::class,'index'])->name('get.universities');
         Route::post('store', [UniversityController::class, 'store'])->name('store.university')->middleware('auth');
     });
 });
