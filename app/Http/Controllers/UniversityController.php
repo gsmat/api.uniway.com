@@ -13,11 +13,14 @@ class UniversityController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return void
+     * @return JsonResponse
      */
     public function index()
     {
-        //
+        $universities = University::paginate(10);
+        return response()->json([
+           'universities' => $universities
+        ]);
     }
 
     /**
@@ -58,10 +61,10 @@ class UniversityController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  int  $id
-     * @return Response
+     * @param int $id
+     * @return void
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         //
     }
