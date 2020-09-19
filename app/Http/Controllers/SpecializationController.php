@@ -20,32 +20,42 @@ class SpecializationController extends Controller
     public function index(FilterRequest $request)
     {
         $validated = $request->validated();
-        $specialization = Specialization::select('name', 'point', 'is_special', 'university_id', 'is_paid','group');
+        $specializations = Specialization::select('name', 'point', 'is_special', 'university_id', 'is_paid', 'group');
+        $unique = [];
+
+        foreach ($specializations->get()->toArray() as $k => $university) {
+            $uniId = $university['university_id'];
+            $unique[] = University::select('id', 'name')->find($uniId);
+            $universities = array_unique($unique);
+        }
+
         if (isset($validated['point'])) {
             $validated['point'] = (int)$validated['point'];
-            $specialization->where('point', '<=', $validated['point'] + 30)
+            $specializations->where('point', '<=', $validated['point'] + 30)
                 ->where('point', '>=', $validated['point'] - 30);
         }
         if (isset($validated['is_special'])) {
             $validated['is_special'] = (int)$validated['is_special'];
-            $specialization->where('is_special', $validated['is_special']);
+            $specializations->where('is_special', $validated['is_special']);
         }
         if (isset($validated['is_paid'])) {
             $validated['is_paid'] = (int)$validated['is_paid'];
-            $specialization->where('is_paid', $validated['is_paid']);
+            $specializations->where('is_paid', $validated['is_paid']);
         }
         if (isset($validated['group'])) {
             $validated['group'] = (int)$validated['group'];
-            $specialization->where('group', $validated['group']);
+            $specializations->where('group', $validated['group']);
         }
         if (isset($validated['university'])) {
             $uni = University::where(
-               'name','like',"%{$validated['university']}%"
+                'name', 'like', "%{$validated['university']}%"
             )->first();
-            $specialization->where('university_id',$uni->id);
+            $specializations->where('university_id', $uni->id);
         }
+
         return response()->json([
-            'specialization' => $specialization->get()
+            'specializations' => $specializations->get(),
+            'universities' => $universities
         ]);
 
     }
