@@ -21,13 +21,7 @@ class SpecializationController extends Controller
     {
         $validated = $request->validated();
         $specializations = Specialization::select('name', 'point', 'is_special', 'university_id', 'is_paid', 'group');
-        $unique = [];
 
-        foreach ($specializations->get()->toArray() as $k => $university) {
-            $uniId = $university['university_id'];
-            $unique[] = University::select('id', 'name')->find($uniId);
-            $universities = array_unique($unique);
-        }
 
         if (isset($validated['point'])) {
             $validated['point'] = (int)$validated['point'];
@@ -51,6 +45,19 @@ class SpecializationController extends Controller
                 'name', 'like', "%{$validated['university']}%"
             )->first();
             $specializations->where('university_id', $uni->id);
+        }
+        $unique = [];
+
+        foreach ($specializations->get()->toArray() as $k => $university) {
+            $uniId = $university['university_id'];
+            $unique[] = University::select('id', 'name')->find($uniId);
+
+        }
+        $universities = array_unique($unique);
+        if (empty($universities)){
+            return response()->json([
+                'msg' => 'not found'
+            ]);
         }
 
         return response()->json([
