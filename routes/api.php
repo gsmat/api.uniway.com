@@ -18,7 +18,7 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('specialization')->group(function () {
         Route::get('/', [SpecializationController::class, 'index'])->name('get.specialization');
-        Route::post('store', [SpecializationController::class, 'store'])->name('store.specialization');
+        Route::post('store', [SpecializationController::class, 'store'])->name('store.specialization')->middleware('auth');
     });
 
     Route::prefix('universities')->group(function () {
